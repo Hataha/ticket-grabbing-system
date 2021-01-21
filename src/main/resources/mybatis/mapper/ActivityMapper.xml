@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kinoko.dao.ActivityMapper">
+
+    <select id="selectAllActivities" resultType="Activity">
+        select * from activity order by startTime;
+    </select>
+
+    <select id="selectActivityById" resultType="Activity">
+        select * from activity where id = #{id};
+    </select>
+
+    <insert id="addActivity" parameterType="Activity">
+        insert into activity
+        (`name`, startTime, detail, start, rest)
+        values (#{name}, #{startTime}, #{detail}, #{start}, #{rest});
+    </insert>
+
+    <select id="selectAllActivitiesByStudentId" resultType="Activity" parameterType="java.lang.String">
+        select * from activity where activity.id in
+        (select a_id from student_activity where s_id = #{id})
+        order by startTime;
+    </select>
+
+    <delete id="removeStudentFromActivity">
+        delete from student_activity where s_id = #{sid} and a_id = #{aid};
+    </delete>
+
+    <update id="updateActivity" parameterType="Activity">
+        update activity set
+        `name` = #{name}, startTime = #{startTime}, detail = #{detail},
+         start = #{start}, rest = #{rest}
+        where `id` = #{id};
+    </update>
+
+    <delete id="deleteActivityById">
+        delete from activity where id = #{id};
+    </delete>
+
+    <delete id="deleteSAInfoByAId">
+        delete from student_activity where a_id = #{id};
+    </delete>
+</mapper>
